@@ -13,7 +13,11 @@ class StudentDetailScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           "Student Details",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight(500)),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight(500),
+            color: Colors.white,
+          ),
         ),
       ),
       body: Padding(

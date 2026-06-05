@@ -31,7 +31,11 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
         centerTitle: true,
         title: Text(
           "Edit Student",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight(500)),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight(500),
+            color: Colors.white,
+          ),
         ),
       ),
 
@@ -62,6 +66,8 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
                 widget.student.name = nameController.text;
                 widget.student.age = int.parse(ageController.text);
                 widget.student.course = courseController.text;
+
+                widget.student.save();
 
                 Navigator.pop(context);
               },

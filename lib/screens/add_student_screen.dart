@@ -20,7 +20,11 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
         centerTitle: true,
         title: Text(
           "Add Student",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight(500)),
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight(500),
+            color: Colors.white,
+          ),
         ),
       ),
 
@@ -50,7 +54,7 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
                   age: int.parse(ageController.text),
                   course: courseController.text,
                 );
-                Navigator.pop(context,student);
+                Navigator.pop(context, student);
               },
               child: Text("Save"),
             ),
