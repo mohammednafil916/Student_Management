@@ -25,20 +25,28 @@ class StudentDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Name: ${student.name}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+
+            Center(
+              child: Text(
+                "Name: ${student.name}",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
             SizedBox(height: 5),
-            Text(
-              "Age: ${student.age}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Center(
+              child: Text(
+                "Age: ${student.age}",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
             SizedBox(height: 5),
-            Text(
-              "Course: ${student.course}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Center(
+              child: Text(
+                "Course: ${student.course}",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
+            
           ],
         ),
       ),
