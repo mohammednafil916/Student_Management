@@ -21,15 +21,42 @@ class StudentRepository {
     return _box.values.toList();
   }
 
-  Future<void> addStudent(Student student) async {
+  Future<bool> addStudent(Student student) async {
+    bool alreadyExists = _box.values.any(
+      (s) =>
+          s.name.toLowerCase() == student.name.toLowerCase() &&
+          s.age == student.age &&
+          s.course.toLowerCase() == student.course.toLowerCase(),
+    );
+
+    if (alreadyExists) {
+      return false;
+    }
+
     await _box.add(student);
+    return true;
+  }
+
+  Future<bool> updateStudent(Student student) async {
+    final students = _box.values.toList();
+
+    bool alreadyExists = students.any(
+      (s) =>
+          s.key != student.key &&
+          s.name.toLowerCase() == student.name.toLowerCase() &&
+          s.age == student.age &&
+          s.course.toLowerCase() == student.course.toLowerCase(),
+    );
+
+    if (alreadyExists) {
+      return false;
+    }
+
+    await student.save();
+    return true;
   }
 
   Future<void> deleteStudent(Student student) async {
     await student.delete();
-  }
-
-  Future<void> updateStudent(Student student) async {
-    await student.save();
   }
 }

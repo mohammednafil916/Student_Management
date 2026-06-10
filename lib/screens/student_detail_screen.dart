@@ -28,21 +28,21 @@ class StudentDetailScreen extends StatelessWidget {
 
             Center(
               child: Text(
-                "Name: ${student.name}",
+                "Student's name is: ${student.name}",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
             SizedBox(height: 5),
             Center(
               child: Text(
-                "Age: ${student.age}",
+                "Student's age is: ${student.age}",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
             SizedBox(height: 5),
             Center(
               child: Text(
-                "Course: ${student.course}",
+                "Student's course is: ${student.course}",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),

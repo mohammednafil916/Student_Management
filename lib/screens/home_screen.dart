@@ -79,9 +79,17 @@ class _HomeScreenState extends State<HomeScreen> {
             context,
             MaterialPageRoute(builder: (context) => AddStudentScreen()),
           );
+
           if (result != null) {
-            await repository.addStudent(result);
-            refreshStudents();
+            bool added = await repository.addStudent(result);
+
+            if (added) {
+              refreshStudents();
+            } else {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Student already exists")));
+            }
           }
         },
         child: Icon(Icons.add),
@@ -243,7 +251,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-
           ],
         ),
       ),

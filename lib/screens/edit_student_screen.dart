@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_learning/model/student_model.dart';
+import 'package:hive_learning/data/student_repository.dart';
 
 class EditStudentScreen extends StatefulWidget {
   const EditStudentScreen({super.key, required this.student});
@@ -62,14 +63,28 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
 
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                final oldName = widget.student.name;
+                final oldAge = widget.student.age;
+                final oldCourse = widget.student.course;
+
                 widget.student.name = nameController.text;
                 widget.student.age = int.parse(ageController.text);
                 widget.student.course = courseController.text;
 
-                widget.student.save();
+                bool updated = await StudentRepository().updateStudent(widget.student,);
 
-                Navigator.pop(context);
+                if (updated) {
+                  Navigator.pop(context);
+                } else {
+                  widget.student.name = oldName;
+                  widget.student.age = oldAge;
+                  widget.student.course = oldCourse;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Student already exists")),
+                  );
+                }
               },
               child: Text("Update"),
             ),
