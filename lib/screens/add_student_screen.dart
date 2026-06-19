@@ -12,51 +12,86 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
   final nameController = TextEditingController();
   final courseController = TextEditingController();
   final ageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Add Student",
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight(500),
+            fontWeight: FontWeight.w500,
             color: Colors.white,
           ),
         ),
       ),
 
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            const CircleAvatar(
+              radius: 40,
+              child: Icon(
+                Icons.person_add,
+                size: 40,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
             TextField(
-              decoration: InputDecoration(labelText: "Student Name"),
               controller: nameController,
+              decoration: const InputDecoration(
+                labelText: "Student Name",
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(),
+              ),
             ),
-            SizedBox(height: 20),
+
+            const SizedBox(height: 15),
+
             TextField(
-              decoration: InputDecoration(labelText: "Student Age"),
               controller: ageController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Student Age",
+                prefixIcon: Icon(Icons.cake),
+                border: OutlineInputBorder(),
+              ),
             ),
-            SizedBox(height: 20),
+
+            const SizedBox(height: 15),
+
             TextField(
-              decoration: InputDecoration(labelText: "Student Course"),
               controller: courseController,
+              decoration: const InputDecoration(
+                labelText: "Student Course",
+                prefixIcon: Icon(Icons.school),
+                border: OutlineInputBorder(),
+              ),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                final student = Student(
-                  name: nameController.text,
-                  age: int.parse(ageController.text),
-                  course: courseController.text,
-                );
-                Navigator.pop(context, student);
-              },
-              child: Text("Save"),
+
+            const SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  final student = Student(
+                    name: nameController.text,
+                    age: int.parse(ageController.text),
+                    course: courseController.text,
+                  );
+
+                  Navigator.pop(context, student);
+                },
+                icon: const Icon(Icons.save),
+                label: const Text("Save Student"),
+              ),
             ),
           ],
         ),

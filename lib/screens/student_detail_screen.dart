@@ -3,6 +3,7 @@ import 'package:hive_learning/model/student_model.dart';
 
 class StudentDetailScreen extends StatelessWidget {
   final Student student;
+
   const StudentDetailScreen({super.key, required this.student});
 
   @override
@@ -11,43 +12,64 @@ class StudentDetailScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Student Details",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight(500),
-            color: Colors.white,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircleAvatar(
+                  radius: 45,
+                  child: Icon(Icons.person, size: 45),
+                ),
 
-            Center(
-              child: Text(
-                "Student's name is: ${student.name}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
+                const SizedBox(height: 20),
+
+                Text(
+                  student.name,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title: const Text("Name"),
+                  subtitle: Text(student.name),
+                ),
+
+                const Divider(),
+
+                ListTile(
+                  leading: const Icon(Icons.cake),
+                  title: const Text("Age"),
+                  subtitle: Text(student.age.toString()),
+                ),
+
+                const Divider(),
+
+                ListTile(
+                  leading: const Icon(Icons.school),
+                  title: const Text("Course"),
+                  subtitle: Text(student.course),
+                ),
+              ],
             ),
-            SizedBox(height: 5),
-            Center(
-              child: Text(
-                "Student's age is: ${student.age}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ),
-            SizedBox(height: 5),
-            Center(
-              child: Text(
-                "Student's course is: ${student.course}",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-            ),
-            
-          ],
+          ),
         ),
       ),
     );

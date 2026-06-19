@@ -3,7 +3,11 @@ import 'package:hive_learning/model/student_model.dart';
 import 'package:hive_learning/data/student_repository.dart';
 
 class EditStudentScreen extends StatefulWidget {
-  const EditStudentScreen({super.key, required this.student});
+  const EditStudentScreen({
+    super.key,
+    required this.student,
+  });
+
   final Student student;
 
   @override
@@ -30,63 +34,99 @@ class _EditStudentScreenState extends State<EditStudentScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Edit Student",
           style: TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight(500),
+            fontWeight: FontWeight.w500,
             color: Colors.white,
           ),
         ),
       ),
-
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            const CircleAvatar(
+              radius: 40,
+              child: Icon(
+                Icons.person,
+                size: 40,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
             TextField(
               controller: nameController,
-              decoration: InputDecoration(labelText: "Student Name"),
+              decoration: const InputDecoration(
+                labelText: "Student Name",
+                prefixIcon: Icon(Icons.person),
+                border: OutlineInputBorder(),
+              ),
             ),
-            SizedBox(height: 10),
+
+            const SizedBox(height: 15),
 
             TextField(
               controller: ageController,
-              decoration: InputDecoration(labelText: "Student Age"),
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: "Student Age",
+                prefixIcon: Icon(Icons.cake),
+                border: OutlineInputBorder(),
+              ),
             ),
-            SizedBox(height: 10),
+
+            const SizedBox(height: 15),
 
             TextField(
               controller: courseController,
-              decoration: InputDecoration(labelText: "Student Course"),
+              decoration: const InputDecoration(
+                labelText: "Student Course",
+                prefixIcon: Icon(Icons.school),
+                border: OutlineInputBorder(),
+              ),
             ),
 
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final oldName = widget.student.name;
-                final oldAge = widget.student.age;
-                final oldCourse = widget.student.course;
+            const SizedBox(height: 20),
 
-                widget.student.name = nameController.text;
-                widget.student.age = int.parse(ageController.text);
-                widget.student.course = courseController.text;
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final oldName = widget.student.name;
+                  final oldAge = widget.student.age;
+                  final oldCourse = widget.student.course;
 
-                bool updated = await StudentRepository().updateStudent(widget.student,);
+                  widget.student.name = nameController.text;
+                  widget.student.age =
+                      int.parse(ageController.text);
+                  widget.student.course =
+                      courseController.text;
 
-                if (updated) {
-                  Navigator.pop(context);
-                } else {
-                  widget.student.name = oldName;
-                  widget.student.age = oldAge;
-                  widget.student.course = oldCourse;
+                  bool updated = await StudentRepository()
+                      .updateStudent(widget.student);
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Student already exists")),
-                  );
-                }
-              },
-              child: Text("Update"),
+                  if (updated) {
+                    Navigator.pop(context);
+                  } else {
+                    widget.student.name = oldName;
+                    widget.student.age = oldAge;
+                    widget.student.course = oldCourse;
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Student already exists",
+                        ),
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.save),
+                label: const Text("Update Student"),
+              ),
             ),
           ],
         ),

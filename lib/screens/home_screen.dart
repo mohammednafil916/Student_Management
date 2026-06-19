@@ -22,18 +22,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late Future<void> studentsFuture;
 
+  bool isSearching = false;
+
   void refreshStudents() {
     searchStudent(searchController.text);
   }
 
   Future<void> loadStudents() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
   }
-
-  final Stream<int> counterStream = Stream.periodic(
-    Duration(seconds: 1),
-    (count) => count,
-  );
 
   final repository = StudentRepository();
 
@@ -62,15 +59,54 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        centerTitle: true,
-        title: Text(
-          "Student List",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight(500),
-            color: Colors.white,
-          ),
+
+        leading: IconButton(
+          onPressed: () {
+            // Menu action
+          },
+          icon: const Icon(Icons.menu, color: Colors.white),
         ),
+
+        centerTitle: true,
+
+        title: isSearching
+            ? TextField(
+                controller: searchController,
+                onChanged: searchStudent,
+                autofocus: true,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  hintText: "Search Student",
+                  hintStyle: TextStyle(color: Colors.white70),
+                  border: InputBorder.none,
+                ),
+              )
+            : const Text(
+                "Student List",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+
+        actions: [
+          IconButton(
+            icon: Icon(
+              isSearching ? Icons.close : Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              setState(() {
+                if (isSearching) {
+                  searchController.clear();
+                  refreshStudents();
+                }
+                isSearching = !isSearching;
+              });
+            },
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -86,44 +122,19 @@ class _HomeScreenState extends State<HomeScreen> {
             if (added) {
               refreshStudents();
             } else {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text("Student already exists")));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Student already exists")),
+              );
             }
           }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
 
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                hintText: "Search Student",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: searchStudent,
-            ),
-
-            SizedBox(height: 10),
-
-            ValueListenableBuilder(
-              valueListenable: studentBox.listenable(),
-              builder: (context, Box<Student> box, _) {
-                return Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Text(
-                    "Total Students: ${box.length}",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                );
-              },
-            ),
-
             Expanded(
               child: Column(
                 children: [
@@ -136,7 +147,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
                             }
 
                             return ListView.builder(
@@ -144,80 +157,213 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemBuilder: (context, index) {
                                 final student = filteredStudents[index];
 
-                                return Card(
-                                  child: ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              StudentDetailScreen(
-                                                student: student,
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 6,
+                                  ),
+                                  child: Card(
+                                    elevation: 6,
+                                    shadowColor: Colors.blue.withOpacity(0.2),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(18),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                StudentDetailScreen(
+                                                  student: student,
+                                                ),
+                                          ),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(14),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 65,
+                                              width: 65,
+                                              decoration: BoxDecoration(
+                                                color: Colors.blue.shade100,
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
                                               ),
-                                        ),
-                                      );
-                                    },
-                                    leading: CircleAvatar(
-                                      child: Icon(Icons.person),
-                                    ),
-                                    title: Text(student.name),
-                                    subtitle: Text(
-                                      "Age: ${student.age} | ${student.course}",
-                                    ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                          onPressed: () async {
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditStudentScreen(
-                                                      student: student,
+                                              child: const Icon(
+                                                Icons.person,
+                                                size: 35,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+
+                                            const SizedBox(width: 15),
+
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    student.name,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                              ),
-                                            );
-                                            refreshStudents();
-                                          },
-                                          icon: Icon(Icons.edit),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text("Delete Student"),
-                                                  content: Text(
-                                                    "Are you sure you want to delete this student?",
                                                   ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text("Cancel"),
+
+                                                  const SizedBox(height: 8),
+
+                                                  Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.cake,
+                                                        size: 16,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      const SizedBox(width: 5),
+                                                      Text(
+                                                        "Age: ${student.age}",
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.black54,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+
+                                                  const SizedBox(height: 5),
+
+                                                  Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.school,
+                                                        size: 16,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      const SizedBox(width: 5),
+                                                      Expanded(
+                                                        child: Text(
+                                                          student.course,
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .black54,
+                                                              ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+
+                                            Column(
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.green.shade50,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
+                                                  ),
+                                                  child: IconButton(
+                                                    onPressed: () async {
+                                                      await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditStudentScreen(
+                                                                student:
+                                                                    student,
+                                                              ),
+                                                        ),
+                                                      );
+                                                      refreshStudents();
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.edit,
+                                                      color: Colors.green,
                                                     ),
-                                                    TextButton(
-                                                      onPressed: () async {
-                                                        await repository
-                                                            .deleteStudent(
-                                                              student,
-                                                            );
-                                                        refreshStudents();
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text("Delete"),
+                                                  ),
+                                                ),
+
+                                                const SizedBox(height: 8),
+
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red.shade50,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
+                                                  ),
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            title: const Text(
+                                                              "Delete Student",
+                                                            ),
+                                                            content: const Text(
+                                                              "Are you sure you want to delete this student?",
+                                                            ),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                      "Cancel",
+                                                                    ),
+                                                              ),
+                                                              TextButton(
+                                                                onPressed: () async {
+                                                                  await repository
+                                                                      .deleteStudent(
+                                                                        student,
+                                                                      );
+
+                                                                  refreshStudents();
+
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                      "Delete",
+                                                                    ),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
                                                     ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
-                                          icon: Icon(Icons.delete),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -228,19 +374,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-
-                  StreamBuilder<int>(
-                    stream: counterStream,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Text("Counter: 0");
-                      }
-
-                      return Padding(
-                        padding: EdgeInsets.all(20),
+                  ValueListenableBuilder(
+                    valueListenable: studentBox.listenable(),
+                    builder: (context, Box<Student> box, _) {
+                      return Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(top: 8, bottom: 8),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: Text(
-                          "Live Counter: ${snapshot.data}",
-                          style: TextStyle(
+                          "Total Students: ${box.length}",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),

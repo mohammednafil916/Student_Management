@@ -5,7 +5,6 @@ import 'package:hive_learning/model/student_model.dart';
 import 'package:hive_learning/data/student_repository.dart';
 
 Future<void> main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
