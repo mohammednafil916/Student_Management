@@ -374,41 +374,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                 ValueListenableBuilder(
-  valueListenable: studentBox.listenable(),
-  builder: (context, Box<Student> box, _) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 15,
-      ),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 97, 159, 209),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.groups,
-            color: Colors.white,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            "Total Students: ${box.length}",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  },
-),
+                  ValueListenableBuilder(
+                    valueListenable: studentBox.listenable(),
+                    builder: (context, Box<Student> box, _) {
+                      return Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 97, 159, 209),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.groups, color: Colors.white),
+                            const SizedBox(width: 10),
+                            Text(
+                              "Total Students: ${box.length}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
